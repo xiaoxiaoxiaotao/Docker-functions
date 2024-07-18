@@ -1,8 +1,8 @@
 ### README.md
 
-# DOCKER_GIN_FUNCTIONS
+# DOCKER-Longest Common Subsequence
 
-This project contains Go code for various algorithms and a simple web server implemented using the Gin framework. The project is containerized using Docker for easy deployment and management.
+This project contains Go code for Longest Common Subsequence algorithms and a simple web server implemented using the Gin framework. The project is containerized using Docker for easy deployment and management.
 
 ## Project Structure
 
@@ -39,13 +39,20 @@ The `Dockerfile` is used to build a Docker image for the Go application. It inst
 
 ## Building and Running the Docker Container
 
-1. **Build the Docker image:**
+1. **Build and Run the Docker image:**
 
+    You can simply run the script `shell.sh`:
+
+    ```sh
+      ./shell.sh
+    ```
+
+    Or you can run the docker with following step:
+
+    First build the docker image.
     ```sh
     docker build -t my-go-app:v1.0 .
     ```
-
-2. **Run the Docker container:**
 
     ```sh
     docker run -p 8080:8080 --name my-gin-container -v "$(pwd):/Docker_gin_functions" my-go-app:v1.0
@@ -57,10 +64,10 @@ The `Dockerfile` is used to build a Docker image for the Go application. It inst
 
     ```sh
     docker run -it --name my-go-container -p 8080:8080  go_gin_functions:v1.0
-    go run main.go
+    go run app.go
     ```
 
-3. **Access the application:**
+2. **Access the application:**
 Open your browser and go to `http://localhost:8080/`. You should see the web server running and responding to requests. You can also access it with the following cmd.
 ```bash
 curl -X GET http://localhost:8080/
