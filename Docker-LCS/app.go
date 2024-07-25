@@ -16,12 +16,12 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to the homepage!",
+			"result": "Welcome to the homepage!",
 		})
 	})
 
 	r.POST("/api", func(c *gin.Context) {
-		s := time.Now()
+		s := time.Now().UnixMicro()
 
 		// Define an instance of the Request struct to store the parsing result
 		var req Request
@@ -30,7 +30,7 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"result":     "Some error occurred while parsing input. Ensure that input is a valid JSON in correct format. Contact admin for more details.",
 				"time_taken": "0",
-				"start_time": s.String(),
+				"start_time": s,
 			})
 			return
 		}
@@ -47,29 +47,30 @@ func main() {
 		} else {
 			LCS_length, LCS = functions.LCS_with_string(str1, str2)
 		}
+		e := time.Now().UnixMicro()
+		elapsedTime := e - s
 
-		e := time.Now()
-		elapsedTime := e.Sub(s).Seconds()
-
-		var result gin.H
+		var result Result
 		if lengthOnly {
-			result = gin.H{
-				"time_taken": fmt.Sprintf("%.2f", elapsedTime),
-				"start_time": s.String(),
-				"end_time":   e.String(),
-				"lcs_length": LCS_length,
+			result = Result{
+				LCS_length: LCS_length,
+				LCS:        "default",
 			}
 		} else {
-			result = gin.H{
-				"time_taken": fmt.Sprintf("%.2f", elapsedTime),
-				"start_time": s.String(),
-				"end_time":   e.String(),
-				"lcs_length": LCS_length,
-				"lcs":        LCS,
+			result = Result{
+				LCS_length: LCS_length,
+				LCS:        LCS,
 			}
 		}
 
-		c.JSON(http.StatusOK, result)
+		response := Response{
+			Result:     result,
+			Time_taken: elapsedTime,
+			Start_time: s,
+		}
+		fmt.Println("LCS Length: ", response)
+
+		c.JSON(http.StatusOK, response)
 
 	})
 
@@ -124,4 +125,15 @@ type RequestData struct {
 	Length_Only bool   `json:"LengthOnly"`
 	Str1        string `json:"str1"`
 	Str2        string `json:"str2"`
+}
+
+type Result struct {
+	LCS_length int    `json:"LCS_length"`
+	LCS        string `json:"LCS"`
+}
+
+type Response struct {
+	Result     Result `json:"result"`
+	Time_taken int64  `json:"time_taken"`
+	Start_time int64  `json:"start_time"`
 }

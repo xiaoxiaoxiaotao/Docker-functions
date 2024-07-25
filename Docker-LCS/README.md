@@ -97,7 +97,7 @@ curl -X POST http://localhost:5000/api \
   -H 'Content-Type: application/json' \
   -d '{
     "root": {
-        "length_only": false,
+        "length_only": true,
         "str1": "abcdef",
         "str2": "abdf"
       }
@@ -105,12 +105,10 @@ curl -X POST http://localhost:5000/api \
 
 
 # Test with length_only set to false
-curl -X POST \
-  http://localhost:5000/api \
+curl -X POST http://localhost:5000/api \
   -H 'Content-Type: application/json' \
   -d '{
-    "root": 
-      {
+    "root": {
         "length_only": false,
         "str1": "abcdef",
         "str2": "abdf"
