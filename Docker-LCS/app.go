@@ -23,8 +23,10 @@ func main() {
 	r.POST("/api", func(c *gin.Context) {
 		s := time.Now()
 
+		// Define an instance of the Request struct to store the parsing result
 		var req Request
 		if err := c.ShouldBindJSON(&req); err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{
 				"result":     "Some error occurred while parsing input. Ensure that input is a valid JSON in correct format. Contact admin for more details.",
 				"time_taken": "0",
@@ -33,9 +35,9 @@ func main() {
 			return
 		}
 
-		lengthOnly := req.Length_Only
-		str1 := req.Str1
-		str2 := req.Str2
+		lengthOnly := req.Root.Length_Only
+		str1 := req.Root.Str1
+		str2 := req.Root.Str2
 
 		var LCS_length int
 		var LCS string
@@ -81,7 +83,7 @@ func main() {
 		})
 	})
 
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":5000"); err != nil {
 		log.Fatal("Failed to run server: ", err)
 	}
 }
@@ -101,7 +103,7 @@ func shutdownServer(c *gin.Context) {
 	}
 
 	r := gin.Default() // Declare the variable 'r' as a gin engine
-	server := &http.Server{Addr: ":8080", Handler: r}
+	server := &http.Server{Addr: ":5000", Handler: r}
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("Server shutdown error: %v", err)
 		c.JSON(http.StatusOK, gin.H{
@@ -115,6 +117,10 @@ func shutdownServer(c *gin.Context) {
 }
 
 type Request struct {
+	Root RequestData `json:"root"`
+}
+
+type RequestData struct {
 	Length_Only bool   `json:"LengthOnly"`
 	Str1        string `json:"str1"`
 	Str2        string `json:"str2"`

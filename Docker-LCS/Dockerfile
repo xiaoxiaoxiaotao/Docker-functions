@@ -8,6 +8,6 @@ RUN go mod download
 
 RUN go mod tidy
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD [ "go", "run" , "app.go"]
